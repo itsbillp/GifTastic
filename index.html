@@ -75,7 +75,7 @@
     // document ready
     $(document).ready(function() {
     
-    // now I add an onlick to build buttons out of the array 
+    // for loop to build buttons out of the array 
         for (i = 0; i < topics.length; i++) {
             $('<button/>', {
             text: topics[i],
@@ -83,7 +83,7 @@
             }).appendTo('#buttonDiv');
         }
        
-    // now we add the click feature to add to div  
+    // click to add topic from input  
         $("#addTopic").on("click", function() {
         $( "#buttonDiv" ).empty();
         event.preventDefault();
@@ -97,7 +97,7 @@
         }
 
         });
-    // Now I add the functionality to click a button 
+    // click to get giphy api images etc 
     $("#buttonDiv").on("click", "button", function() {
         $( "#results" ).empty();  
         var topic = $(this).text();
