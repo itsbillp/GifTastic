@@ -1,117 +1,144 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <title>GifTastic Homework Bill Papas</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <style>
-  button {
-    margin: 5px;
-  }
-  img {
-    margin: 10px;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gif HW Bill Papas</title>
 
-  }
-  </style>
+    <style>
+        * {
+            text-align: center;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+        h1 {
+            font-size: 300%; 
+        }
+        button {
+            background-color: teal;
+            color: white;
+            font-size: 130%;
+            border-radius: 20px;
+            padding: 15px;
+            margin: 5px;
+        }
+        input {
+            font-size: 150%;
+        }
+        #results {
+        display: flex;
+        flex-wrap: wrap;
+        }
+        img {
+            padding: 10px;
+        }
+        
+    </style>
 
 </head>
 
 <body>
-  
-  <hr>
-  <h2>Bills GifTastic Homework</h2>
-  <hr>
-  
-  <div id="buttonDiv"></div>
-  <hr>
-  <input type="text" name="text" id="inputText"/>
-  <button id= "addDiv" class="btn btn-primary addButton">Add button</button>
-  <p id="pText"></p>
-  <hr>
-  
-  
-  <div id="gifDiv" class="row">
-  </div>
-  
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script type="text/javascript">
+    <!-- div to wrap the whole page  -->
+    <div class="container">
 
-    var things = ['cat', 'dog', 'vegan', 'moose', 'chicken']
+        <h1>Bill's Gif-Tastic Homework!</h1>
+        <h2>Please click a button to get the related gifs</h2>
+        <hr>
+
+        <!-- div for the buttons -->
+        <div id="buttonDiv"></div>
+        <hr>
+
+        <!-- div for the add form -->
+        <div id="inputs"></div>
+        <button id="addTopic">add topic</button>
+        <input id="input" type="text" placeholder="*enter another one*">
+        <hr>
+
+        <!-- div for the results -->
+        <div id="results" class="row">
+            <img id="placeholder" src="https://media.giphy.com/media/vMnuZGHJfFSTe/giphy.gif" alt="placeholder">
+        </div>
+    </div>
+
+    <!-- Jquery Link -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     
-        $(".addButton").click(function(){
-          inputText = $("#inputText").val();
-          things.push(inputText);
-          var buttons = $('<button class= "btn btn-primary clickButton">'+ things[i] + '</button>') 
-        buttons.appendTo('#buttonDiv'); 
-          buttons.appendTo('#buttonDiv');
-  });
- 
-    for (var i = 0; i < things.length; i++) { 
-        var buttons = $('<button class= "btn btn-primary clickButton">'+ things[i] + '</button>') 
-        buttons.appendTo('#buttonDiv'); 
-    } 
+    <!-- JS -->
+    <script>
+
+    // Create the array of topics
+    var topics = ['cowabunga', 'party on', 'rock and roll', 'excellent', 'hella', 'gnarley', 'righteous']
     
+    // document ready
+    $(document).ready(function() {
+    
+    // now I add an onlick to build buttons out of the array 
+        for (i = 0; i < topics.length; i++) {
+            $('<button/>', {
+            text: topics[i],
+            class: 'clickButton',
+            }).appendTo('#buttonDiv');
+        }
+       
+    // now we add the click feature to add to div  
+        $("#addTopic").on("click", function() {
+        $( "#buttonDiv" ).empty();
+        event.preventDefault();
+        var newTopic = $("#input").val();
+        topics.push(newTopic);
+        for (var i = 0; i < topics.length; i++) {
+            $('<button/>', {
+            text: topics[i],
+            class: 'clickButton',
+            }).appendTo('#buttonDiv');
+        }
 
+        });
+    // Now I add the functionality to click a button 
+    $("#buttonDiv").on("click", "button", function() {
+        $( "#results" ).empty();  
+        var topic = $(this).text();
 
-    // Event listener for all button elements
-    $(".clickButton").on("click", function() {
-      // clears the gifDiv
-      $( "#gifDiv" ).empty();
-      // clears the button div NOT USED
-      // $( "#buttonDiv" ).empty();
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        topic + "&api_key=YS3WwzSLTCLCJiH0Ln5drf4SYVL9ZZXs&limit=10";
 
-
-      // In this case, the "this" keyword refers to the button that was clicked
-      var person = $(this).text();
-
-      // Constructing a URL to search Giphy for the name of the person who said the quote
-      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-        person + "&api_key=YS3WwzSLTCLCJiH0Ln5drf4SYVL9ZZXs&limit=10";
-
-      // Performing our AJAX GET request
-      $.ajax({
+        $.ajax({
         url: queryURL,
         method: "GET"
-      })
-        // After the data comes back from the API
-        .then(function(response) {
-          // Storing an array of results in the results variable
-          var results = response.data;
-
-          // Looping over every result item
-          for (var i = 0; i < results.length; i++) {
-
-            // Only taking action if the photo has an appropriate rating
-            if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
-              // Creating a div for the gif
-              var gifDiv = $("<div>");
-
-              // Storing the result item's rating
-              var rating = results[i].rating;
-
-              // Creating a paragraph tag with the result item's rating
-              var p = $("<p>").text("Rating: " + rating);
-
-              // Creating an image tag
-              var personImage = $("<img>");
-
-              // Giving the image tag an src attribute of a proprty pulled off the
-              // result item
-              personImage.attr("src", results[i].images.fixed_height.url);
-
-              // Appending the paragraph and personImage we created to the "gifDiv" div we created
-              gifDiv.append(p);
-              gifDiv.append(personImage);
-
-              // Prepending the gifDiv to the "#gifDiv" div in the HTML
-              $("#gifDiv").prepend(gifDiv);
-            }
-          }
+        }) 
+            .then(function(response) {
+            var results = response.data;
+            for (var i = 0; i < results.length; i++) {
+                var gifDiv = $("<div>");
+                var rating = results[i].rating;
+                var p = $("<p>").text("Rating: " + rating);
+                var topicImage = $("<img>");
+                topicImage.attr("src", results[i].images.fixed_height_still.url);
+                topicImage.attr("data-still", results[i].images.fixed_height_still.url);
+                topicImage.attr("data-animate", results[i].images.fixed_height.url);
+                topicImage.attr("data-state", "still");
+                topicImage.attr("class", "gif");
+                gifDiv.append(p);
+                gifDiv.append(topicImage);
+                $("#results").prepend(gifDiv);
+                }
+                    // The pause functionality 
+                    $(".gif").on("click", function() {
+                    var state = $(this).attr("data-state");
+                    if (state === "still") {
+                    $(this).attr("src", $(this).attr("data-animate"));
+                    $(this).attr("data-state", "animate");
+                    } else {
+                    $(this).attr("src", $(this).attr("data-still"));
+                    $(this).attr("data-state", "still");
+                    }
+                    });
+                });
+            });
         });
-    });
-  </script>
+    </script> 
 </body>
-
 </html>
