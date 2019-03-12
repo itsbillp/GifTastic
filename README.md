@@ -1,4 +1,6 @@
-# GifTastic! 
+# GifTastic!
+
+[Demo](https://itsbillp.github.io/GifTastic/)
 
 ## A web app that uses the giphy API to return GIFs based on button presses
 
